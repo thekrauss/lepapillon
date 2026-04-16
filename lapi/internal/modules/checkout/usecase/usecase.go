@@ -37,10 +37,11 @@ type checkoutUseCase struct {
 	userRepo       authdomain.UserRepository
 	prestationRepo prestationrepo.PrestationRepository
 	distributor    worker.TaskDistributor
+	chefEmail      string
 }
 
-func NewCheckoutUseCase(repo repository.CheckoutRepository, panierRepo panierrepo.PanierRepository, userRepo authdomain.UserRepository, prestRepo prestationrepo.PrestationRepository, distributor worker.TaskDistributor) ICheckoutUseCase {
-	return &checkoutUseCase{repo: repo, panierRepo: panierRepo, userRepo: userRepo, prestationRepo: prestRepo, distributor: distributor}
+func NewCheckoutUseCase(repo repository.CheckoutRepository, panierRepo panierrepo.PanierRepository, userRepo authdomain.UserRepository, prestRepo prestationrepo.PrestationRepository, distributor worker.TaskDistributor, chefEmail string) ICheckoutUseCase {
+	return &checkoutUseCase{repo: repo, panierRepo: panierRepo, userRepo: userRepo, prestationRepo: prestRepo, distributor: distributor, chefEmail: chefEmail}
 }
 
 // ── CreateOrder ─────────────────────────────────────────────────────
@@ -280,9 +281,10 @@ func (uc *checkoutUseCase) enqueueChefNotification(ctx context.Context, order *d
 	prestationEuros := fmt.Sprintf("%.2f €", float64(prestation.Price)/100)
 	address := fmt.Sprintf("%s, %s %s", prestation.Street, prestation.PostalCode, prestation.City)
 
-	// The cheffe's email could come from settings, for now we use a config-based approach
-	// TODO: load from settings table (key: "chef_email")
-	chefEmail := "cheffe@saveursthai.fr"
+	chefEmail := uc.chefEmail
+	if chefEmail == "" {
+		chefEmail = "cheffe@saveursthai.fr"
+	}
 
 	if err := uc.distributor.DistributeMailTask(ctx,
 		[]string{chefEmail},

@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/thekrauss/lepapillon/internal/core/config"
 )
@@ -36,6 +37,9 @@ func NewMailerService(cfg config.MailConfig) *MailerService {
 }
 
 func (m *MailerService) GenerateHTML(templateName string, data map[string]string) (string, error) {
+	if !strings.HasSuffix(templateName, ".html") {
+		templateName += ".html"
+	}
 	tmpl, err := template.ParseFS(os.DirFS(templateRoot), "base.html", templateName)
 	if err != nil {
 		return "", fmt.Errorf("failed to parse template %s: %w", templateName, err)

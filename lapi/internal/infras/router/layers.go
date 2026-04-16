@@ -96,6 +96,7 @@ func (a *App) initDomainLayers() error {
 				Keycloak:        keycloakClient,
 				FrontendBaseURL: frontendBaseURL,
 				OIDCClientID:    strings.TrimSpace(a.Config.OIDC.ClientID),
+				Distributor:     a.Distributor,
 			})
 		}
 	}
@@ -118,10 +119,11 @@ func (a *App) initDomainLayers() error {
 
 	// ── Checkout ────────────────────────────────────────────────────
 	checkoutRepo := checkoutrepo.NewCheckoutRepository(a.DB)
-	checkoutUC := checkoutuc.NewCheckoutUseCase(checkoutRepo, panierRepo, userRepo, prestationRepo, a.Distributor)
+	chefEmail := strings.TrimSpace(a.Config.Mail.ChefEmail)
+	checkoutUC := checkoutuc.NewCheckoutUseCase(checkoutRepo, panierRepo, userRepo, prestationRepo, a.Distributor, chefEmail)
 
 	// ── Backoffice ──────────────────────────────────────────────────
-	backofficeUC := backofficeuc.NewBackofficeUseCase(a.DB, checkoutRepo, prestationRepo, settingsService)
+	backofficeUC := backofficeuc.NewBackofficeUseCase(a.DB, checkoutRepo, prestationRepo, settingsService, a.Distributor)
 
 	// ── Payment (Stripe) ────────────────────────────────────────────
 	paymentEventRepo := paymentrepo.NewRepository(a.DB)

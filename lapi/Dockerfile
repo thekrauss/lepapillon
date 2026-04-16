@@ -28,6 +28,7 @@ COPY --from=builder /app/internal/modules/mail/templates /internal/modules/mail/
 
 ENV TZ=Europe/Paris
 ENV CONFIG_PATH=internal/core/config/config.yaml
+ENV MAIL_TEMPLATE_DIR=/internal/modules/mail/templates
 
 EXPOSE 8080
 

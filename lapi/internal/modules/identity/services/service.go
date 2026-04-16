@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/sirupsen/logrus"
+	"github.com/thekrauss/lepapillon/internal/infras/worker"
 	"github.com/thekrauss/lepapillon/internal/modules/identity/keycloak"
 )
 
@@ -18,7 +19,8 @@ type Deps struct {
 	Keycloak            keycloak.KeycloakClient
 	FrontendBaseURL     string
 	OIDCClientID        string
-	AllowedRedirectURIs []string // M4+M5 FIX: allowlist for redirect_uri
+	AllowedRedirectURIs []string
+	Distributor         worker.TaskDistributor
 }
 
 type Service interface {
@@ -37,8 +39,9 @@ type identityService struct {
 	kc                  keycloak.KeycloakClient
 	frontendBaseURL     string
 	oidcClientID        string
-	allowedRedirectURIs map[string]struct{} // M4+M5 FIX
-	oauthStates         sync.Map            // M7 FIX: CSRF state tokens
+	allowedRedirectURIs map[string]struct{}
+	oauthStates         sync.Map
+	distributor         worker.TaskDistributor
 }
 
 func NewService(deps Deps) Service {
@@ -58,6 +61,7 @@ func NewService(deps Deps) Service {
 		frontendBaseURL:     base,
 		oidcClientID:        strings.TrimSpace(deps.OIDCClientID),
 		allowedRedirectURIs: allowed,
+		distributor:         deps.Distributor,
 	}
 }
 
@@ -108,6 +112,21 @@ func (s *identityService) Register(ctx context.Context, req RegisterRequest) (*R
 		"email":            profile.Email,
 		"event":            "register",
 	}).Info("new user registered")
+
+	// Send welcome email
+	if s.distributor != nil {
+		if err := s.distributor.DistributeMailTask(ctx,
+			[]string{profile.Email},
+			"Bienvenue chez Saveurs Thai !",
+			"welcome.html",
+			map[string]string{
+				"name": strings.TrimSpace(req.FullName),
+				"url":  s.frontendBaseURL + "/boutique",
+			},
+		); err != nil {
+			logrus.WithError(err).Warn("failed to enqueue welcome email")
+		}
+	}
 
 	return &RegisterResponse{
 		KeycloakUserID: profile.ID,

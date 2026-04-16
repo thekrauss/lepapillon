@@ -116,12 +116,13 @@ type RateLimitConfig struct {
 }
 
 type MailConfig struct {
-	Enabled   bool           `mapstructure:"enabled"`
-	Provider  string         `mapstructure:"provider"`
-	FromName  string         `mapstructure:"from_name"`
-	FromEmail string         `mapstructure:"from_email"`
-	SendGrid  SendGridConfig `mapstructure:"sendgrid"`
-	SMTP      SMTPConfig     `mapstructure:"smtp"`
+	Enabled    bool           `mapstructure:"enabled"`
+	Provider   string         `mapstructure:"provider"`
+	FromName   string         `mapstructure:"from_name"`
+	FromEmail  string         `mapstructure:"from_email"`
+	ChefEmail  string         `mapstructure:"chef_email"`
+	SendGrid   SendGridConfig `mapstructure:"sendgrid"`
+	SMTP       SMTPConfig     `mapstructure:"smtp"`
 }
 
 type SendGridConfig struct {

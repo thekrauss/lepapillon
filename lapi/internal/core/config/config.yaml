@@ -75,6 +75,7 @@ mail:
   provider: smtp
   from_name: "Saveurs Thaï"
   from_email: ""
+  chef_email: "cheffe@saveursthai.fr"
   sendgrid:
     api_key: ""
   smtp:

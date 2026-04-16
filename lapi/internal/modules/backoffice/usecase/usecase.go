@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/sirupsen/logrus"
+	"github.com/thekrauss/lepapillon/internal/infras/worker"
 	"github.com/thekrauss/lepapillon/internal/modules/backoffice/types"
 	checkoutrepo "github.com/thekrauss/lepapillon/internal/modules/checkout/repository"
 	prestationrepo "github.com/thekrauss/lepapillon/internal/modules/prestation/repository"
@@ -29,6 +31,7 @@ type backofficeUseCase struct {
 	orderRepo   checkoutrepo.CheckoutRepository
 	prestRepo   prestationrepo.PrestationRepository
 	settingsSvc settingssvc.Service
+	distributor worker.TaskDistributor
 }
 
 func NewBackofficeUseCase(
@@ -36,8 +39,9 @@ func NewBackofficeUseCase(
 	orderRepo checkoutrepo.CheckoutRepository,
 	prestRepo prestationrepo.PrestationRepository,
 	settingsSvc settingssvc.Service,
+	distributor worker.TaskDistributor,
 ) IBackofficeUseCase {
-	return &backofficeUseCase{db: db, orderRepo: orderRepo, prestRepo: prestRepo, settingsSvc: settingsSvc}
+	return &backofficeUseCase{db: db, orderRepo: orderRepo, prestRepo: prestRepo, settingsSvc: settingsSvc, distributor: distributor}
 }
 
 func (uc *backofficeUseCase) GetDashboard(ctx context.Context) (*types.DashboardResponse, error) {
@@ -245,7 +249,47 @@ func (uc *backofficeUseCase) ListBookingDetails(ctx context.Context) ([]types.Bo
 }
 
 func (uc *backofficeUseCase) UpdateOrderStatus(ctx context.Context, orderID uuid.UUID, status string) error {
-	return uc.orderRepo.UpdateOrderStatus(ctx, orderID, status)
+	if err := uc.orderRepo.UpdateOrderStatus(ctx, orderID, status); err != nil {
+		return err
+	}
+
+	// Send "order ready" email when status becomes "ready"
+	if status == "ready" {
+		go uc.sendOrderReadyEmail(ctx, orderID)
+	}
+	return nil
+}
+
+func (uc *backofficeUseCase) sendOrderReadyEmail(ctx context.Context, orderID uuid.UUID) {
+	if uc.distributor == nil {
+		return
+	}
+	type orderRow struct {
+		UserEmail  string `gorm:"column:user_email"`
+		PickupCode string `gorm:"column:pickup_code"`
+	}
+	var row orderRow
+	uc.db.WithContext(ctx).Raw(`
+		SELECT u.email AS user_email, o.pickup_code
+		FROM orders o LEFT JOIN users u ON o.user_id = u.id
+		WHERE o.id = ?
+	`, orderID).Scan(&row)
+
+	if row.UserEmail == "" {
+		return
+	}
+
+	if err := uc.distributor.DistributeMailTask(ctx,
+		[]string{row.UserEmail},
+		"Votre commande est prete !",
+		"order_ready.html",
+		map[string]string{
+			"order_id":    orderID.String()[:8],
+			"pickup_code": row.PickupCode,
+		},
+	); err != nil {
+		logrus.WithError(err).Warn("failed to enqueue order ready email")
+	}
 }
 
 func (uc *backofficeUseCase) GetPrestationPricing(ctx context.Context) (*settingstypes.PrestationPricing, error) {
