@@ -1,0 +1,10 @@
+{{define "content"}}
+<div class="card">
+  <h1>Commande confirmée !</h1>
+  <p>Merci {{.name}} pour votre commande. Voici votre récapitulatif :</p>
+  <p><strong>Commande :</strong> #{{.order_id}}</p>
+  <p><strong>Total :</strong> <span class="highlight">{{.total}}</span></p>
+  <div class="code">{{.pickup_code}}</div>
+  <p style="text-align:center; margin-top:8px; font-size:13px;">Code de retrait — présentez-le lors de la livraison</p>
+</div>
+{{end}}

@@ -1,0 +1,16 @@
+{{define "content"}}
+<div class="card">
+  <h1>Nouvelle prestation !</h1>
+  <p><strong>Commande :</strong> #{{.order_id}}</p>
+  <p><strong>Date :</strong> {{.date}} — {{.time_slot}}</p>
+  <p><strong>Client :</strong> {{.client_name}} ({{.client_phone}})</p>
+  <p><strong>Adresse :</strong> {{.address}}</p>
+  <p><strong>Convives :</strong> {{.guest_count}}</p>
+  <p><strong>Total commande :</strong> {{.total}}</p>
+  <p><strong>Prestation :</strong> {{.prestation_price}}</p>
+  {{if .notes}}<p><strong>Notes :</strong> {{.notes}}</p>{{end}}
+  <hr style="border:none; border-top:1px solid #E7E0D8; margin:20px 0;">
+  <p><strong>Produits à préparer :</strong></p>
+  <pre style="background:#F5F0EB; padding:16px; border-radius:8px; font-size:14px;">{{.products}}</pre>
+</div>
+{{end}}

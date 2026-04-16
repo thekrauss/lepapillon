@@ -1,0 +1,11 @@
+.git
+.next
+node_modules
+*.md
+.env
+.env.*
+docker/
+docs/
+tmp/
+.idea/
+.vscode/

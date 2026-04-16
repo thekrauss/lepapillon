@@ -1,0 +1,88 @@
+service_name: lepapillon
+project_id: "lepapillon-apis"
+env: dev
+
+logger:
+  level: info
+
+server:
+  http_port: 8080
+  public_base_url: ""
+  shutdown_timeout: 10s
+  allowed_origins:
+    - "http://localhost:3000"
+    - "http://127.0.0.1:3000"
+    - "*"
+
+database:
+  driver: postgres
+  host: localhost
+  port: 5432
+  user: postgres
+  password: "postgres"
+  name: lepapillon_db
+  sslmode: disable
+  max_open_conns: 25
+  max_idle_conns: 10
+
+redis:
+  enabled: true
+  host: localhost
+  port: 6379
+  password: ""
+  db: 0
+
+jwt:
+  secret: "dev-jwt-secret-change-in-production"
+  access_expiry: 15m
+  refresh_expiry: 168h
+
+oidc:
+  enabled: true
+  issuer: http://localhost:8180/realms/lepapillon
+  jwks_url: http://localhost:8180/realms/lepapillon/protocol/openid-connect/certs
+  audience: lepapillon-api
+  client_id: lepapillon-api
+  client_secret: ""
+  admin_base_url: http://localhost:8180
+  admin_realm: lepapillon
+  admin_client_id: lepapillon-admin
+  admin_client_secret: ""
+  strict_audience: false
+  http_timeout: 5s
+
+frontend:
+  base_url: http://localhost:3000
+
+payment:
+  provider: stripe
+  currency: EUR
+  stripe_secret_key: ""
+  stripe_publishable_key: ""
+  stripe_webhook_secret: ""
+  webhook_async_enabled: false
+  http_timeout: 10s
+  reconcile_interval: 2m
+  reconcile_batch_size: 50
+
+rate_limit:
+  enabled: true
+  limit: 100
+  burst: 20
+
+mail:
+  enabled: false
+  provider: smtp
+  from_name: "Saveurs Thaï"
+  from_email: ""
+  sendgrid:
+    api_key: ""
+  smtp:
+    host: smtp.gmail.com
+    port: 587
+    user: ""
+    app_password: ""
+
+worker:
+  enabled: true
+  concurrency: 10

@@ -1,0 +1,32 @@
+# ── Go ──────────────────────────────────────────
+lapi/server
+*.exe
+*.out
+
+# ── Node / Next.js ──────────────────────────────
+lapiweb/node_modules/
+lapiweb/.next/
+lapiweb/out/
+
+# ── IDE ─────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ── OS ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Env / secrets ───────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── Docker volumes ──────────────────────────────
+lapi/pgdata/
+lapi/redisdata/
+
+# ── Build ───────────────────────────────────────
+*.log

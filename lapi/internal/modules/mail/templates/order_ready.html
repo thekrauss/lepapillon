@@ -1,0 +1,8 @@
+{{define "content"}}
+<div class="card">
+  <h1>Votre commande est prête !</h1>
+  <p>Votre commande <strong>#{{.OrderID}}</strong> est prête pour le retrait.</p>
+  <div class="code">{{.PickupCode}}</div>
+  <p style="text-align:center; margin-top:8px; font-size:13px;">Présentez ce code lors du retrait</p>
+</div>
+{{end}}

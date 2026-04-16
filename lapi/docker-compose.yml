@@ -1,0 +1,128 @@
+version: "3.9"
+
+services:
+  # ── PostgreSQL ─────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: lepapillon_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Create keycloak DB on first boot
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ── Redis ──────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ── Keycloak ───────────────────────────────────────────────────────
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    restart: unless-stopped
+    command: start-dev --import-realm
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres
+      KC_DB_URL_PORT: 5432
+      KC_DB_URL_DATABASE: keycloak_db
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+      KC_DB_SCHEMA: public
+      KC_HTTP_PORT: 8080
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_ENABLED: "true"
+      KC_PROXY_HEADERS: xforwarded
+      KC_FEATURES: token-exchange,admin-fine-grained-authz
+    ports:
+      - "8180:8080"
+    volumes:
+      - ./docker/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080; echo -e 'GET /realms/master HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; cat <&3 | grep -q '200'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  # ── API Go (server + worker) ───────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      CONFIG_PATH: internal/core/config/config.yaml
+      # Database
+      LEPAPILLON_DATABASE_HOST: postgres
+      LEPAPILLON_DATABASE_PORT: 5432
+      LEPAPILLON_DATABASE_USER: postgres
+      LEPAPILLON_DATABASE_PASSWORD: postgres
+      LEPAPILLON_DATABASE_NAME: lepapillon_db
+      LEPAPILLON_DATABASE_SSLMODE: disable
+      # Redis
+      LEPAPILLON_REDIS_HOST: redis
+      LEPAPILLON_REDIS_PORT: 6379
+      # JWT
+      LEPAPILLON_JWT_SECRET: ${JWT_SECRET:-changeme-in-production}
+      # Keycloak / OIDC
+      LEPAPILLON_OIDC_ENABLED: "true"
+      LEPAPILLON_OIDC_ISSUER: http://keycloak:8080/realms/lepapillon
+      LEPAPILLON_OIDC_JWKS_URL: http://keycloak:8080/realms/lepapillon/protocol/openid-connect/certs
+      LEPAPILLON_OIDC_CLIENT_ID: lepapillon-api
+      LEPAPILLON_OIDC_CLIENT_SECRET: ${KC_API_SECRET:-lepapillon-api-secret}
+      LEPAPILLON_OIDC_ADMIN_BASE_URL: http://keycloak:8080
+      LEPAPILLON_OIDC_ADMIN_REALM: lepapillon
+      LEPAPILLON_OIDC_ADMIN_CLIENT_ID: lepapillon-admin
+      LEPAPILLON_OIDC_ADMIN_CLIENT_SECRET: ${KC_ADMIN_SECRET:-lepapillon-admin-secret}
+      # Stripe
+      LEPAPILLON_PAYMENT_STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      LEPAPILLON_PAYMENT_STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY:-}
+      LEPAPILLON_PAYMENT_STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      # Frontend
+      LEPAPILLON_FRONTEND_BASE_URL: ${FRONTEND_URL:-http://localhost:3000}
+      # Server
+      LEPAPILLON_SERVER_ALLOWED_ORIGINS: "http://localhost:3000,http://127.0.0.1:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/api/v1/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  pgdata:
+  redisdata:

@@ -1,0 +1,278 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* ── Saveurs Thaï — couleurs métier ─────────────────────── */
+  --color-st-gold: var(--st-gold);
+  --color-st-gold-hover: var(--st-gold-hover);
+  --color-st-cream: var(--st-cream);
+  --color-st-charcoal: var(--st-charcoal);
+  --color-st-warm-gray: var(--st-warm-gray);
+  --color-st-forest: var(--st-forest);
+  --color-st-navy: var(--st-navy);
+}
+
+:root {
+  /* ── Brand tokens ──────────────────────────────────────── */
+  --st-gold: #D97706;
+  --st-gold-hover: #B45309;
+  --st-gold-soft: rgba(217, 119, 6, 0.12);
+  --st-gold-wash: rgba(217, 119, 6, 0.06);
+  --st-cream: #FFFBF5;
+  --st-charcoal: #1C1917;
+  --st-warm-gray: #78716C;
+  --st-forest: #15803D;
+  --st-navy: #1E3A5F;
+
+  /* ── shadcn semantic — light (default) ─────────────────── */
+  --background: #FFFBF5;
+  --foreground: #1C1917;
+  --card: #FFFFFF;
+  --card-foreground: #1C1917;
+  --popover: #FFFFFF;
+  --popover-foreground: #1C1917;
+  --primary: #D97706;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F5F0EB;
+  --secondary-foreground: #1C1917;
+  --muted: #F5F0EB;
+  --muted-foreground: #78716C;
+  --accent: #F5F0EB;
+  --accent-foreground: #1C1917;
+  --destructive: #DC2626;
+  --border: #E7E0D8;
+  --input: #E7E0D8;
+  --ring: rgba(217, 119, 6, 0.4);
+  --chart-1: #D97706;
+  --chart-2: #15803D;
+  --chart-3: #1E3A5F;
+  --chart-4: #B45309;
+  --chart-5: #78716C;
+  --radius: 0.625rem;
+  --sidebar: #FFFBF5;
+  --sidebar-foreground: #1C1917;
+  --sidebar-primary: #D97706;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F5F0EB;
+  --sidebar-accent-foreground: #1C1917;
+  --sidebar-border: #E7E0D8;
+  --sidebar-ring: rgba(217, 119, 6, 0.4);
+}
+
+.dark {
+  --st-gold: #F59E0B;
+  --st-gold-hover: #D97706;
+  --st-gold-soft: rgba(245, 158, 11, 0.15);
+  --st-gold-wash: rgba(245, 158, 11, 0.08);
+  --st-cream: #1C1917;
+  --st-charcoal: #F5F0EB;
+  --st-warm-gray: #A8A29E;
+  --st-forest: #22C55E;
+  --st-navy: #60A5FA;
+
+  --background: #1C1917;
+  --foreground: #F5F0EB;
+  --card: #292524;
+  --card-foreground: #F5F0EB;
+  --popover: #292524;
+  --popover-foreground: #F5F0EB;
+  --primary: #F59E0B;
+  --primary-foreground: #1C1917;
+  --secondary: #292524;
+  --secondary-foreground: #F5F0EB;
+  --muted: #292524;
+  --muted-foreground: #A8A29E;
+  --accent: #292524;
+  --accent-foreground: #F5F0EB;
+  --destructive: #EF4444;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: rgba(245, 158, 11, 0.5);
+  --chart-1: #F59E0B;
+  --chart-2: #22C55E;
+  --chart-3: #3B82F6;
+  --chart-4: #D97706;
+  --chart-5: #A8A29E;
+  --sidebar: #1C1917;
+  --sidebar-foreground: #F5F0EB;
+  --sidebar-primary: #F59E0B;
+  --sidebar-primary-foreground: #1C1917;
+  --sidebar-accent: #292524;
+  --sidebar-accent-foreground: #F5F0EB;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: rgba(245, 158, 11, 0.5);
+}
+
+/* ── Base ────────────────────────────────────────────────── */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scrollbar-width: none;
+  }
+
+  html::-webkit-scrollbar {
+    display: none;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    overflow-x: clip;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-playfair), Georgia, serif;
+  }
+
+  ::selection {
+    background: rgba(217, 119, 6, 0.18);
+    color: var(--st-charcoal);
+  }
+}
+
+/* ── Saveurs Thaï — design system components ─────────────── */
+
+@layer components {
+
+  /* ── Layout ────────────────────────────────────────────── */
+  .st-section {
+    @apply mx-auto max-w-7xl px-5 sm:px-8 lg:px-10;
+  }
+
+  /* ── Typography ────────────────────────────────────────── */
+  .st-kicker {
+    @apply inline-block text-[11px] font-bold uppercase tracking-[0.22em];
+    color: var(--st-gold);
+  }
+
+  .st-heading {
+    font-family: var(--font-playfair), Georgia, serif;
+    @apply text-3xl font-bold tracking-tight sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1];
+    color: var(--foreground);
+  }
+
+  .st-subheading {
+    @apply text-base leading-relaxed;
+    color: var(--st-warm-gray);
+  }
+
+  /* ── Cards ─────────────────────────────────────────────── */
+  .st-card {
+    @apply rounded-2xl border bg-card p-6;
+    border-color: var(--border);
+    box-shadow:
+      0 1px 2px rgba(28, 25, 23, 0.04),
+      0 4px 16px rgba(28, 25, 23, 0.04);
+  }
+
+  /* ── Buttons ───────────────────────────────────────────── */
+  .st-btn-primary {
+    @apply inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold text-white transition-all duration-200;
+    background: var(--st-gold);
+  }
+
+  .st-btn-primary:hover {
+    background: var(--st-gold-hover);
+    box-shadow: 0 6px 20px -4px rgba(217, 119, 6, 0.35);
+    transform: translateY(-1px);
+  }
+
+  .st-btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px -2px rgba(217, 119, 6, 0.3);
+  }
+
+  .st-btn-secondary {
+    @apply inline-flex items-center justify-center rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-200;
+    color: var(--foreground);
+    border-color: var(--border);
+    background: transparent;
+  }
+
+  .st-btn-secondary:hover {
+    border-color: var(--st-gold);
+    color: var(--st-gold);
+    background: var(--st-gold-wash);
+  }
+
+  /* ── Badges ────────────────────────────────────────────── */
+  .st-badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold;
+    background: var(--st-gold-soft);
+    color: var(--st-gold-hover);
+  }
+
+  .st-badge-success {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold;
+    background: rgba(21, 128, 61, 0.1);
+    color: var(--st-forest);
+  }
+
+  /* ── Inputs ────────────────────────────────────────────── */
+  .st-input {
+    @apply rounded-xl border px-4 py-3 text-sm outline-none transition-all duration-200;
+    color: var(--foreground);
+    border-color: var(--border);
+    background: var(--card);
+  }
+
+  .st-input:focus {
+    border-color: var(--st-gold);
+    box-shadow: 0 0 0 3px var(--st-gold-soft);
+  }
+
+  .st-input::placeholder {
+    color: var(--st-warm-gray);
+  }
+}
