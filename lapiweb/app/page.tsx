@@ -6,20 +6,23 @@ import FeaturedProductsSection from "@/components/shop/FeaturedProductsSection";
 import ChefSection from "@/components/shop/ChefSection";
 import TestimonialsSection from "@/components/shop/TestimonialsSection";
 import CtaBannerSection from "@/components/shop/CtaBannerSection";
+import AuroraWrapper from "@/components/AuroraWrapper";
 
 export default function Home() {
   return (
     <>
-      <Header />
-      <main>
-        <HeroSection />
-        <HowItWorksSection />
-        <FeaturedProductsSection />
-        <ChefSection />
-        <TestimonialsSection />
-        <CtaBannerSection />
-      </main>
-      <Footer />
+      <AuroraWrapper>
+        <Header />
+        <main>
+          <HeroSection />
+          <HowItWorksSection />
+          <FeaturedProductsSection />
+          <ChefSection />
+          <TestimonialsSection />
+          <CtaBannerSection />
+        </main>
+        <Footer />
+      </AuroraWrapper>
     </>
   );
 }

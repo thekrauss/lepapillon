@@ -8,6 +8,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
+  --font-custom: var(--font-custom);
   --font-serif: var(--font-playfair);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -56,10 +57,17 @@
   --color-st-navy: var(--st-navy);
 }
 
+/* ── NOUVEAU : AURORA KEYFRAMES ───────────────────────── */
+@keyframes aurora-move {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 :root {
   /* ── Brand tokens ──────────────────────────────────────── */
-  --st-gold: #D97706;
-  --st-gold-hover: #B45309;
+  --st-blue: #1B9CFC;
+  --st-blue-hover: #177dcb;
   --st-gold-soft: rgba(217, 119, 6, 0.12);
   --st-gold-wash: rgba(217, 119, 6, 0.06);
   --st-cream: #FFFBF5;
@@ -75,9 +83,9 @@
   --card-foreground: #1C1917;
   --popover: #FFFFFF;
   --popover-foreground: #1C1917;
-  --primary: #D97706;
+  --primary: #1B9CFC;
   --primary-foreground: #FFFFFF;
-  --secondary: #F5F0EB;
+  --secondary: #177dcb;
   --secondary-foreground: #1C1917;
   --muted: #F5F0EB;
   --muted-foreground: #78716C;
@@ -101,6 +109,12 @@
   --sidebar-accent-foreground: #1C1917;
   --sidebar-border: #E7E0D8;
   --sidebar-ring: rgba(217, 119, 6, 0.4);
+
+  /* ── NOUVEAU : AURORA COLORS (Light) ──────────────────── */
+  --aurora-1: rgba(241, 129, 8, 0.6);
+  --aurora-2: rgba(191, 155, 48, 0.3);
+  --aurora-3: rgba(77, 38, 0, 0.5);
+  --aurora-4: rgba(29, 255, 48, 0.4);
 }
 
 .dark {
@@ -145,6 +159,12 @@
   --sidebar-accent-foreground: #F5F0EB;
   --sidebar-border: rgba(255, 255, 255, 0.1);
   --sidebar-ring: rgba(245, 158, 11, 0.5);
+
+  /* ── NOUVEAU : AURORA COLORS (Dark) ───────────────────── */
+  --aurora-1: rgba(26, 77, 58, 0.3);
+  --aurora-2: rgba(191, 155, 48, 0.2);
+  --aurora-3: rgba(77, 38, 0, 0.3);
+  --aurora-4: rgba(29, 255, 48, 0.1);
 }
 
 /* ── Base ────────────────────────────────────────────────── */
@@ -169,10 +189,20 @@
   body {
     @apply bg-background text-foreground font-sans;
     overflow-x: clip;
+
+    /* ── NOUVEAU : APPLICATION DE L'EFFET AURORA ────────────── */
+    /* On ajoute le background-image par-dessus le bg-background */
+    background-image:
+            radial-gradient(at 10% 20%, var(--aurora-1) 0px, transparent 50%),
+            radial-gradient(at 80% 0%, var(--aurora-2) 0px, transparent 50%),
+            radial-gradient(at 0% 100%, var(--aurora-3) 0px, transparent 50%),
+            radial-gradient(at 80% 90%, var(--aurora-4) 0px, transparent 50%);
+    background-size: 200% 200%;
+    animation: aurora-move 20s ease-in-out infinite;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-playfair), Georgia, serif;
+    font-family: var(--font-custom), var(--font-playfair), Georgia, serif;
   }
 
   ::selection {
@@ -184,6 +214,11 @@
 /* ── Saveurs Thaï — design system components ─────────────── */
 
 @layer components {
+
+  /* ── NOUVEAU : GLASS CARD ──────────────────────────────── */
+  .glass-card {
+    @apply backdrop-blur-xl bg-white/70 dark:bg-zinc-900/70 border border-white/20 dark:border-zinc-800/50 shadow-2xl;
+  }
 
   /* ── Layout ────────────────────────────────────────────── */
   .st-section {

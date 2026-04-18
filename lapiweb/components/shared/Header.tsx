@@ -26,7 +26,7 @@ const navLinks = [
   { label: "Contact", href: "/contact" },
 ];
 
-export default function Header() {
+export default function   Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);

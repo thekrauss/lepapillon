@@ -17,7 +17,7 @@ const steps = [
     description:
       "Livraison rapide à Paris et en Île-de-France sous 24h. Paiement 100% sécurisé.",
     color: "bg-st-forest/10 text-st-forest",
-  },
+  },  
   {
     icon: UtensilsCrossed,
     title: "Savourez",
