@@ -75,7 +75,7 @@ export default function HeroSection() {
               initial="hidden"
               animate="show"
               custom={2}
-              className="mt-6 max-w-lg text-base leading-relaxed text-st-warm-gray sm:text-lg font-medium"
+              className="mt-6 max-w-lg text-base leading-relaxed text-black sm:text-lg font-medium"
             >
               Kits de cuisine prêts à préparer, ingrédients artisanaux importés
               et prestation cheffe à domicile pour une expérience authentique
@@ -89,7 +89,7 @@ export default function HeroSection() {
               custom={3}
               className="mt-10 flex flex-col gap-3.5 sm:flex-row sm:items-center"
             >
-              <Link href="/boutique" className="st-btn-primary gap-2 px-7 py-3.5 text-[13px]">
+              <Link href="/boutique" className="st-btn-primary gap-2 px-7 py-3.5 text-[13px] text-black">
                 <ShoppingBag className="h-4 w-4" />
                 Découvrir les kits
               </Link>
@@ -105,7 +105,7 @@ export default function HeroSection() {
               initial="hidden"
               animate="show"
               custom={4}
-              className="mt-12 flex items-center gap-6 text-xs text-st-warm-gray/90 font-medium"
+              className="mt-12 flex items-center gap-6 text-xs text-black/90 font-bold"
             >
               {["100% authentique", "Livraison 24h", "Paiement sécurisé"].map(
                 (text) => (

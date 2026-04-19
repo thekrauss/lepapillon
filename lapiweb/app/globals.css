@@ -161,8 +161,8 @@
   --sidebar-ring: rgba(245, 158, 11, 0.5);
 
   /* ── NOUVEAU : AURORA COLORS (Dark) ───────────────────── */
-  --aurora-1: rgba(26, 77, 58, 0.3);
-  --aurora-2: rgba(191, 155, 48, 0.2);
+  --aurora-1: rgba(15, 113, 77, 0.3);
+  --aurora-2: rgba(181, 48, 191, 0.2);
   --aurora-3: rgba(77, 38, 0, 0.3);
   --aurora-4: rgba(29, 255, 48, 0.1);
 }

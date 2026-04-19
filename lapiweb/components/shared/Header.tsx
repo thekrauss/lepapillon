@@ -63,8 +63,8 @@ export default function   Header() {
       <div className="border-b border-st-gold/10 bg-[var(--st-cream)]/80 backdrop-blur-xl">
         <nav className="st-section flex h-16 items-center justify-between lg:h-[72px]">
           {/* ── logo ──────────────────────────────────────────── */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-st-gold text-white">
+          <Link href="/" className="flex items-center gap-1">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-st-gold text-black">
               <ChefHat className="h-5 w-5" />
             </span>
             <span className="font-serif text-xl font-bold tracking-tight text-st-charcoal">

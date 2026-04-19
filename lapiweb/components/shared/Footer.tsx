@@ -31,10 +31,10 @@ export default function Footer() {
             {/* brand column */}
             <div className="lg:col-span-4">
               <Link href="/" className="inline-flex items-center gap-2.5">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-st-gold text-white">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-st-gold text-black">
                   <ChefHat className="h-5 w-5" />
                 </span>
-                <span className="font-serif text-xl font-bold tracking-tight">
+                <span className="font-serif items-center text-xl font-bold tracking-tight">
                   Saveurs<span className="text-st-gold">Thaï</span>
                 </span>
               </Link>
