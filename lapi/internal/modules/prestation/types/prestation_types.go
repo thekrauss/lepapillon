@@ -9,11 +9,11 @@ import (
 type NoBody struct{}
 
 type SlotIDPath struct {
-	SlotID uuid.UUID `path:"slotId"`
+	SlotID string `path:"slotId"`
 }
 
 type BookingIDPath struct {
-	BookingID uuid.UUID `path:"bookingId"`
+	BookingID string `path:"bookingId"`
 }
 
 // ── Responses ───────────────────────────────────────────────────────
@@ -35,6 +35,7 @@ type BookingResponse struct {
 	AddressPostalCode string        `json:"address_postal_code"`
 	GuestCount        int           `json:"guest_count"`
 	Notes             string        `json:"notes"`
+	ChefNotes         string        `json:"chef_notes,omitempty"`
 	Status            string        `json:"status"`
 	CreatedAt         time.Time     `json:"created_at"`
 }
@@ -52,4 +53,33 @@ type BlockSlotInput struct {
 
 type UnblockSlotInput struct {
 	SlotIDPath
+}
+
+// ── Admin booking management ────────────────────────────────────────
+
+type UpdateBookingStatusInput struct {
+	BookingIDPath
+	Status string `json:"status" validate:"required,oneof=confirmed completed cancelled"`
+}
+
+type UpdateChefNotesInput struct {
+	BookingIDPath
+	Notes string `json:"notes"`
+}
+
+type CancelBookingInput struct {
+	BookingIDPath
+	Reason string `json:"reason"`
+	Refund bool   `json:"refund"`
+}
+
+type NotifyBookingInput struct {
+	BookingIDPath
+}
+
+// ── Extended admin booking response ────────────────────────────────
+
+type BookingAdminResponse struct {
+	BookingResponse
+	ChefNotes string `json:"chef_notes,omitempty"`
 }

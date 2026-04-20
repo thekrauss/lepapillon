@@ -147,6 +147,23 @@
   --sidebar-ring: rgba(245, 158, 11, 0.5);
 }
 
+/* ── Animations ──────────────────────────────────────────── */
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(var(--float-rotate, 0deg)); }
+  50%       { transform: translateY(-10px) rotate(var(--float-rotate, 0deg)); }
+}
+
+@keyframes glow-ring {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.4); }
+  50%       { box-shadow: 0 0 0 12px rgba(217, 119, 6, 0); }
+}
+
 /* ── Base ────────────────────────────────────────────────── */
 
 @layer base {
@@ -257,6 +274,25 @@
     @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold;
     background: rgba(21, 128, 61, 0.1);
     color: var(--st-forest);
+  }
+
+  /* ── Marquee ───────────────────────────────────────────── */
+  .animate-marquee {
+    animation: marquee 35s linear infinite;
+    will-change: transform;
+  }
+
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+
+  /* ── Float ─────────────────────────────────────────────── */
+  .animate-float {
+    animation: float 5s ease-in-out infinite;
+  }
+
+  .animate-glow-ring {
+    animation: glow-ring 2.5s ease-in-out infinite;
   }
 
   /* ── Inputs ────────────────────────────────────────────── */

@@ -37,15 +37,12 @@ export default function ChefSection() {
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="relative"
           >
-            <div className="aspect-[4/5] overflow-hidden rounded-[2rem] border border-st-navy/8 bg-gradient-to-br from-[#EEF2FF] via-[#F0F4FF] to-[#F5F0EB] shadow-2xl shadow-st-navy/[0.06]">
-              <div className="flex h-full flex-col items-center justify-center gap-4 p-8">
-                <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-st-navy/8">
-                  <ChefHat className="h-12 w-12 text-st-navy/30" />
-                </div>
-                <p className="text-sm text-st-warm-gray/50">
-                  Photo : cheffe en action
-                </p>
-              </div>
+            <div className="aspect-[4/5] overflow-hidden rounded-[2rem] border border-st-navy/8 shadow-2xl shadow-st-navy/[0.06]">
+              <img
+                src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80"
+                alt="Cheffe thaïlandaise en cuisine"
+                className="h-full w-full object-cover"
+              />
             </div>
 
             {/* floating stats card */}

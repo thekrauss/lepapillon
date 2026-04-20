@@ -1,6 +1,7 @@
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import HeroSection from "@/components/shop/HeroSection";
+import MarqueeStrip from "@/components/shop/MarqueeStrip";
 import HowItWorksSection from "@/components/shop/HowItWorksSection";
 import FeaturedProductsSection from "@/components/shop/FeaturedProductsSection";
 import ChefSection from "@/components/shop/ChefSection";
@@ -13,6 +14,7 @@ export default function Home() {
       <Header />
       <main>
         <HeroSection />
+        <MarqueeStrip />
         <HowItWorksSection />
         <FeaturedProductsSection />
         <ChefSection />

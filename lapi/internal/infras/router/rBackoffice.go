@@ -28,6 +28,9 @@ func addBackofficeRoutes(a *App) {
 	BackofficeGroup.AddRoute("/orders", http.MethodGet, "Lister les commandes", tonic.Handler(ctrl.ListOrders, http.StatusOK)).
 		AddResponse(http.StatusOK, "Liste des commandes", []types.RecentOrderEntry{})
 
+	BackofficeGroup.AddRoute("/orders/:orderId", http.MethodGet, "Detail d'une commande", tonic.Handler(ctrl.GetOrderDetail, http.StatusOK)).
+		AddResponse(http.StatusOK, "Commande détaillée", &types.OrderDetailResponse{})
+
 	BackofficeGroup.AddRoute("/orders/:orderId/status", http.MethodPut, "Changer le statut d'une commande", tonic.Handler(ctrl.UpdateOrderStatus, http.StatusNoContent)).
 		AddPayload(&types.UpdateOrderStatusRequest{}).
 		AddIdempotency()

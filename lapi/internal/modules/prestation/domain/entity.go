@@ -26,6 +26,7 @@ type PrestationBooking struct {
 	AddressPostalCode string          `gorm:"size:10;not null" json:"address_postal_code"`
 	GuestCount        int             `gorm:"not null" json:"guest_count"`
 	Notes             string          `gorm:"type:text" json:"notes"`
+	ChefNotes         string          `gorm:"type:text;default:''" json:"chef_notes,omitempty"`
 	Status            string          `gorm:"size:20;default:confirmed" json:"status"`
 	CreatedAt         time.Time       `json:"created_at"`
 }

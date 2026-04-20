@@ -52,6 +52,28 @@ func addPrestationRoutes(a *App) {
 
 	AdminPrestationGroup.AddRoute("/bookings", http.MethodGet, "Toutes les réservations", tonic.Handler(ctrl.ListAllBookings, http.StatusOK)).
 		AddResponse(http.StatusOK, "Planning prestations", []types.BookingResponse{})
+
+	// Feature 6: change booking status
+	AdminPrestationGroup.AddRoute("/bookings/:bookingId/status", http.MethodPut, "Changer statut réservation",
+		tonic.Handler(ctrl.UpdateBookingStatus, http.StatusOK)).
+		AddPayload(&types.UpdateBookingStatusInput{}).
+		AddResponse(http.StatusOK, "Réservation mise à jour", &types.BookingResponse{})
+
+	// Feature 7: send reminder email
+	AdminPrestationGroup.AddRoute("/bookings/:bookingId/notify", http.MethodPost, "Envoyer rappel email client",
+		tonic.Handler(ctrl.NotifyClient, http.StatusNoContent))
+
+	// Feature 8: internal chef notes
+	AdminPrestationGroup.AddRoute("/bookings/:bookingId/chef-notes", http.MethodPut, "Notes internes cheffe",
+		tonic.Handler(ctrl.UpdateChefNotes, http.StatusOK)).
+		AddPayload(&types.UpdateChefNotesInput{}).
+		AddResponse(http.StatusOK, "Notes mises à jour", &types.BookingResponse{})
+
+	// Feature 9: cancel + auto-refund
+	AdminPrestationGroup.AddRoute("/bookings/:bookingId/cancel", http.MethodPost, "Annuler avec remboursement",
+		tonic.Handler(ctrl.CancelWithRefund, http.StatusOK)).
+		AddPayload(&types.CancelBookingInput{}).
+		AddResponse(http.StatusOK, "Réservation annulée", &types.BookingResponse{})
 }
 
 // prestationPricingHandler returns the current prestation pricing for the frontend.

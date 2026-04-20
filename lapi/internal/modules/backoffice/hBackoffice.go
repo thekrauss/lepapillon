@@ -13,6 +13,7 @@ import (
 type IBackofficeController interface {
 	GetDashboard(c *gin.Context, in *types.NoBody) (*types.DashboardResponse, error)
 	ListOrders(c *gin.Context, in *types.NoBody) ([]types.RecentOrderEntry, error)
+	GetOrderDetail(c *gin.Context, in *types.OrderIDPath) (*types.OrderDetailResponse, error)
 	ListClients(c *gin.Context, in *types.NoBody) ([]types.ClientEntry, error)
 	ListBookingDetails(c *gin.Context, in *types.NoBody) ([]types.BookingDetailResponse, error)
 	ListAllSlots(c *gin.Context, in *types.NoBody) ([]types.AdminSlotResponse, error)
@@ -35,6 +36,14 @@ func (ctrl *BackofficeController) GetDashboard(c *gin.Context, _ *types.NoBody) 
 
 func (ctrl *BackofficeController) ListOrders(c *gin.Context, _ *types.NoBody) ([]types.RecentOrderEntry, error) {
 	return ctrl.uc.ListOrders(c.Request.Context())
+}
+
+func (ctrl *BackofficeController) GetOrderDetail(c *gin.Context, in *types.OrderIDPath) (*types.OrderDetailResponse, error) {
+	orderID, err := uuid.Parse(in.OrderID)
+	if err != nil {
+		return nil, fmt.Errorf("invalid order ID: %w", err)
+	}
+	return ctrl.uc.GetOrderDetail(c.Request.Context(), orderID)
 }
 
 func (ctrl *BackofficeController) ListClients(c *gin.Context, _ *types.NoBody) ([]types.ClientEntry, error) {

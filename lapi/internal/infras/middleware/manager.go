@@ -54,6 +54,13 @@ func (m *Manager) APIGroup() *gin.RouterGroup {
 
 // AuthMiddleware returns a Gin middleware that validates JWT Bearer tokens.
 // Public paths are skipped.
+//
+// Auth priority (first match wins):
+//  1. Cache Redis  — token déjà validé récemment, évite le re-parsing.
+//  2. OIDC Keycloak (RS256) — source de vérité principale en production.
+//     Tous les tokens émis par /identity/login passent par là.
+//  3. JWT HS256 local — fallback dev uniquement (Keycloak absent ou désactivé).
+//     En production, s'assurer que OIDC est activé pour ne jamais atteindre ce chemin.
 func (m *Manager) AuthMiddleware() gin.HandlerFunc {
 	publicSet := make(map[string]struct{}, len(m.publicPaths))
 	for _, p := range m.publicPaths {
@@ -161,7 +168,7 @@ func (m *Manager) AuthMiddleware() gin.HandlerFunc {
 			}
 		}
 
-		// Fallback: local HS256 JWT
+		// Fallback: local HS256 JWT (dev uniquement — ne doit pas être atteint en prod si OIDC est activé)
 		claims, err := ParseJWT(tokenStr, m.jwtCfg.Secret)
 		if err != nil {
 			domain.AbortWithError(c, domain.ErrUnauthorized)

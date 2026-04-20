@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import * as adminDAL from "@/DAL/admin";
 import type { CreateProductRequest, UpdateProductRequest, CreateCategoryRequest, UpdateCategoryRequest } from "@/types/catalogueTypes";
-import type { UpdateOrderStatusRequest } from "@/types/adminTypes";
+import type { UpdateOrderStatusRequest, UpdatePrestationStatusRequest, UpdateChefNotesRequest, CancelPrestationRequest } from "@/types/adminTypes";
 import type { CreateSlotRequest } from "@/types/prestationTypes";
 
 // ── Dashboard ───────────────────────────────────────────────────────
@@ -95,6 +95,14 @@ export function useOrders() {
   });
 }
 
+export function useAdminOrder(orderId: string) {
+  return useQuery({
+    queryKey: ["admin-order", orderId],
+    queryFn: () => adminDAL.getAdminOrder(orderId).then((r) => r.data),
+    enabled: !!orderId,
+  });
+}
+
 export function useClients() {
   return useQuery({
     queryKey: ["admin-clients"],
@@ -178,6 +186,53 @@ export function useBookingDetails() {
   return useQuery({
     queryKey: ["admin-booking-details"],
     queryFn: () => adminDAL.listBookingDetails().then((r) => r.data),
+  });
+}
+
+export function useUpdatePrestationStatus() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ bookingId, data }: { bookingId: string; data: UpdatePrestationStatusRequest }) =>
+      adminDAL.updatePrestationStatus(bookingId, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin-booking-details"] });
+      qc.invalidateQueries({ queryKey: ["admin-dashboard"] });
+      toast.success("Statut mis à jour");
+    },
+  });
+}
+
+export function useSendPrestationReminder() {
+  return useMutation({
+    mutationFn: (bookingId: string) => adminDAL.sendPrestationReminder(bookingId),
+    onSuccess: () => toast.success("Rappel envoyé au client"),
+    onError: () => toast.error("Erreur lors de l'envoi du rappel"),
+  });
+}
+
+export function useUpdateChefNotes() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ bookingId, data }: { bookingId: string; data: UpdateChefNotesRequest }) =>
+      adminDAL.updatePrestationChefNotes(bookingId, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin-booking-details"] });
+      toast.success("Notes sauvegardées");
+    },
+  });
+}
+
+export function useCancelPrestationWithRefund() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ bookingId, data }: { bookingId: string; data: CancelPrestationRequest }) =>
+      adminDAL.cancelPrestationWithRefund(bookingId, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin-booking-details"] });
+      qc.invalidateQueries({ queryKey: ["admin-dashboard"] });
+      toast.success("Réservation annulée");
+    },
+    onError: () => toast.error("Impossible d'annuler cette réservation"),
   });
 }
 

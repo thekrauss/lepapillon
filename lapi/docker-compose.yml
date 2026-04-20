@@ -109,8 +109,8 @@ services:
       LEPAPILLON_MAIL_CHEF_EMAIL: ${CHEF_EMAIL:-cheffe@saveursthai.fr}
       # Frontend
       LEPAPILLON_FRONTEND_BASE_URL: ${FRONTEND_URL:-http://localhost:3000}
-      # Server
-      LEPAPILLON_SERVER_ALLOWED_ORIGINS: "http://localhost:3000,http://127.0.0.1:3000"
+      # Server — set ALLOWED_ORIGINS=https://mondomaine.fr in production
+      LEPAPILLON_SERVER_ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000,http://91.134.135.17:3000}
     depends_on:
       postgres:
         condition: service_healthy

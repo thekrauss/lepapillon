@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -18,6 +19,7 @@ import (
 type IBackofficeUseCase interface {
 	GetDashboard(ctx context.Context) (*types.DashboardResponse, error)
 	ListOrders(ctx context.Context) ([]types.RecentOrderEntry, error)
+	GetOrderDetail(ctx context.Context, orderID uuid.UUID) (*types.OrderDetailResponse, error)
 	ListClients(ctx context.Context) ([]types.ClientEntry, error)
 	ListBookingDetails(ctx context.Context) ([]types.BookingDetailResponse, error)
 	ListAllSlots(ctx context.Context) ([]types.AdminSlotResponse, error)
@@ -75,6 +77,89 @@ func (uc *backofficeUseCase) ListOrders(ctx context.Context) ([]types.RecentOrde
 		WHERE o.deleted_at IS NULL ORDER BY o.created_at DESC LIMIT 100
 	`).Scan(&orders).Error
 	return orders, err
+}
+
+func (uc *backofficeUseCase) GetOrderDetail(ctx context.Context, orderID uuid.UUID) (*types.OrderDetailResponse, error) {
+	type orderRow struct {
+		OrderID        uuid.UUID `gorm:"column:order_id"`
+		UserEmail      string    `gorm:"column:user_email"`
+		UserFirstName  string    `gorm:"column:user_first_name"`
+		UserLastName   string    `gorm:"column:user_last_name"`
+		UserPhone      string    `gorm:"column:user_phone"`
+		Status         string    `gorm:"column:status"`
+		ItemsTotal     int64     `gorm:"column:items_total"`
+		PrestationTotal int64    `gorm:"column:prestation_total"`
+		Total          int64     `gorm:"column:total"`
+		DeliveryStreet  string   `gorm:"column:delivery_street"`
+		DeliveryCity    string   `gorm:"column:delivery_city"`
+		DeliveryPostal  string   `gorm:"column:delivery_postal_code"`
+		DeliveryPhone   string   `gorm:"column:delivery_phone"`
+		PickupCode      string   `gorm:"column:pickup_code"`
+		Notes           string   `gorm:"column:notes"`
+		CreatedAt       time.Time `gorm:"column:created_at"`
+	}
+	var row orderRow
+	err := uc.db.WithContext(ctx).Raw(`
+		SELECT o.id AS order_id, u.email AS user_email, u.first_name AS user_first_name,
+		       u.last_name AS user_last_name, u.phone AS user_phone,
+		       o.status, o.items_total, o.prestation_total, o.total,
+		       o.delivery_street, o.delivery_city, o.delivery_postal_code,
+		       o.delivery_phone, o.pickup_code, o.notes, o.created_at
+		FROM orders o LEFT JOIN users u ON o.user_id = u.id
+		WHERE o.id = ? AND o.deleted_at IS NULL
+	`, orderID).Scan(&row).Error
+	if err != nil {
+		return nil, err
+	}
+	if row.OrderID == uuid.Nil {
+		return nil, fmt.Errorf("order not found")
+	}
+
+	type itemRow struct {
+		ProductName string `gorm:"column:product_name"`
+		Quantity    int    `gorm:"column:quantity"`
+		Price       int64  `gorm:"column:price"`
+	}
+	var items []itemRow
+	uc.db.WithContext(ctx).Raw(`
+		SELECT product_name, quantity, price FROM order_items WHERE order_id = ?
+	`, orderID).Scan(&items)
+
+	detailItems := make([]types.OrderDetailItem, 0, len(items))
+	for _, it := range items {
+		detailItems = append(detailItems, types.OrderDetailItem{
+			ProductName: it.ProductName,
+			Quantity:    it.Quantity,
+			Price:       it.Price,
+		})
+	}
+
+	userName := row.UserFirstName
+	if row.UserLastName != "" {
+		userName += " " + row.UserLastName
+	}
+	if userName == "" {
+		userName = row.UserEmail
+	}
+
+	return &types.OrderDetailResponse{
+		OrderID:         row.OrderID,
+		UserEmail:       row.UserEmail,
+		UserName:        userName,
+		UserPhone:       row.UserPhone,
+		Status:          row.Status,
+		Items:           detailItems,
+		ItemsTotal:      row.ItemsTotal,
+		PrestationTotal: row.PrestationTotal,
+		Total:           row.Total,
+		DeliveryStreet:  row.DeliveryStreet,
+		DeliveryCity:    row.DeliveryCity,
+		DeliveryPostal:  row.DeliveryPostal,
+		DeliveryPhone:   row.DeliveryPhone,
+		PickupCode:      row.PickupCode,
+		Notes:           row.Notes,
+		CreatedAt:       row.CreatedAt,
+	}, nil
 }
 
 func (uc *backofficeUseCase) ListClients(ctx context.Context) ([]types.ClientEntry, error) {
@@ -155,6 +240,7 @@ func (uc *backofficeUseCase) ListBookingDetails(ctx context.Context) ([]types.Bo
 		AddressPostalCode string    `gorm:"column:address_postal_code"`
 		GuestCount        int       `gorm:"column:guest_count"`
 		Notes             string    `gorm:"column:notes"`
+		ChefNotes         string    `gorm:"column:chef_notes"`
 		Status            string    `gorm:"column:status"`
 		OrderTotal        int64     `gorm:"column:order_total"`
 		CreatedAt         string    `gorm:"column:created_at"`
@@ -166,7 +252,7 @@ func (uc *backofficeUseCase) ListBookingDetails(ctx context.Context) ([]types.Bo
 			   u.email AS user_email, u.first_name AS user_first_name, u.last_name AS user_last_name,
 			   ps.date AS slot_date, ps.time_slot,
 			   pb.address_street, pb.address_city, pb.address_postal_code,
-			   pb.guest_count, pb.notes, pb.status,
+			   pb.guest_count, pb.notes, pb.chef_notes, pb.status,
 			   COALESCE(o.total, 0) AS order_total,
 			   pb.created_at
 		FROM prestation_bookings pb
@@ -239,6 +325,7 @@ func (uc *backofficeUseCase) ListBookingDetails(ctx context.Context) ([]types.Bo
 			AddressPostalCode: r.AddressPostalCode,
 			GuestCount:        r.GuestCount,
 			Notes:             r.Notes,
+			ChefNotes:         r.ChefNotes,
 			Status:            r.Status,
 			OrderItems:        itemsByOrder[r.OrderID],
 			OrderTotal:        r.OrderTotal,

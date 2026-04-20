@@ -12,7 +12,6 @@ server:
   allowed_origins:
     - "http://localhost:3000"
     - "http://127.0.0.1:3000"
-    - "*"
 
 database:
   driver: postgres
@@ -33,7 +32,8 @@ redis:
   db: 0
 
 jwt:
-  secret: "dev-jwt-secret-change-in-production"
+  # Override via env var LEPAPILLON_JWT_SECRET — never commit a real secret here
+  secret: ""
   access_expiry: 15m
   refresh_expiry: 168h
 

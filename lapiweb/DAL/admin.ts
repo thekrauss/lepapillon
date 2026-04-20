@@ -1,5 +1,9 @@
 import { authClient } from "@/lib/axios-instance";
-import type { DashboardResponse, UpdateOrderStatusRequest } from "@/types/adminTypes";
+import type {
+  DashboardResponse, UpdateOrderStatusRequest,
+  UpdatePrestationStatusRequest, UpdateChefNotesRequest, CancelPrestationRequest,
+  OrderDetailResponse,
+} from "@/types/adminTypes";
 import type {
   CreateProductRequest, UpdateProductRequest, ProductResponse,
   CreateCategoryRequest, UpdateCategoryRequest, CategoryResponse,
@@ -39,6 +43,9 @@ export const deleteCategory = (id: string) =>
 export const listOrders = () =>
   authClient.get<import("@/types/adminTypes").RecentOrderEntry[]>("/admin/orders");
 
+export const getAdminOrder = (orderId: string) =>
+  authClient.get<OrderDetailResponse>(`/admin/orders/${orderId}`);
+
 export const updateOrderStatus = (orderId: string, data: UpdateOrderStatusRequest) =>
   authClient.put(`/admin/orders/${orderId}/status`, data);
 
@@ -64,6 +71,18 @@ export const listBookingDetails = () =>
 
 export const listAdminSlots = () =>
   authClient.get<import("@/types/adminTypes").AdminSlotResponse[]>("/admin/slots");
+
+export const updatePrestationStatus = (bookingId: string, data: UpdatePrestationStatusRequest) =>
+  authClient.put<BookingResponse>(`/admin/prestations/bookings/${bookingId}/status`, data);
+
+export const sendPrestationReminder = (bookingId: string) =>
+  authClient.post(`/admin/prestations/bookings/${bookingId}/notify`);
+
+export const updatePrestationChefNotes = (bookingId: string, data: UpdateChefNotesRequest) =>
+  authClient.put<BookingResponse>(`/admin/prestations/bookings/${bookingId}/chef-notes`, data);
+
+export const cancelPrestationWithRefund = (bookingId: string, data: CancelPrestationRequest) =>
+  authClient.post<BookingResponse>(`/admin/prestations/bookings/${bookingId}/cancel`, data);
 
 // ── Settings ────────────────────────────────────────────────────────
 

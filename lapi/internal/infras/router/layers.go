@@ -113,29 +113,38 @@ func (a *App) initDomainLayers() error {
 	panierRepo := panierrepo.NewRedisPanierRepository(redisClient)
 	panierUC := panieruc.NewPanierUseCase(panierRepo, catalogueRepo, settingsService)
 
-	// ── Prestation ──────────────────────────────────────────────────
-	prestationRepo := prestationrepo.NewPrestationRepository(a.DB)
-	prestationUC := prestationuc.NewPrestationUseCase(prestationRepo)
-
-	// ── Checkout ────────────────────────────────────────────────────
-	checkoutRepo := checkoutrepo.NewCheckoutRepository(a.DB)
-	chefEmail := strings.TrimSpace(a.Config.Mail.ChefEmail)
-	checkoutUC := checkoutuc.NewCheckoutUseCase(checkoutRepo, panierRepo, userRepo, prestationRepo, a.Distributor, chefEmail)
-
-	// ── Backoffice ──────────────────────────────────────────────────
-	backofficeUC := backofficeuc.NewBackofficeUseCase(a.DB, checkoutRepo, prestationRepo, settingsService, a.Distributor)
-
-	// ── Payment (Stripe) ────────────────────────────────────────────
+	// ── Payment (Stripe) — init early so prestation cancel/refund can use it ──
 	paymentEventRepo := paymentrepo.NewRepository(a.DB)
 	var paymentService paymentsvc.Service
 	var paymentController paymentCtrl.IPaymentController
 	stripeSvc, stripeErr := paymentsvc.NewStripeService(a.Config.Payment)
 	if stripeErr == nil {
 		paymentService = stripeSvc
-		paymentController = paymentCtrl.NewPaymentController(stripeSvc, checkoutRepo)
 		logrus.Info("Stripe payment service initialized")
 	} else {
 		logrus.Warnf("Stripe payment service not configured: %v", stripeErr)
+	}
+
+	// ── Prestation ──────────────────────────────────────────────────
+	prestationRepo := prestationrepo.NewPrestationRepository(a.DB)
+
+	// ── Checkout ────────────────────────────────────────────────────
+	checkoutRepo := checkoutrepo.NewCheckoutRepository(a.DB)
+	prestationUC := prestationuc.NewPrestationUseCase(prestationRepo, prestationuc.Deps{
+		UserRepo:     userRepo,
+		CheckoutRepo: checkoutRepo,
+		Distributor:  a.Distributor,
+		Payment:      paymentService,
+	})
+	chefEmail := strings.TrimSpace(a.Config.Mail.ChefEmail)
+	checkoutUC := checkoutuc.NewCheckoutUseCase(checkoutRepo, panierRepo, userRepo, prestationRepo, a.Distributor, chefEmail)
+
+	// ── Backoffice ──────────────────────────────────────────────────
+	backofficeUC := backofficeuc.NewBackofficeUseCase(a.DB, checkoutRepo, prestationRepo, settingsService, a.Distributor)
+
+	// wire payment controller now that checkoutRepo is ready
+	if paymentService != nil {
+		paymentController = paymentCtrl.NewPaymentController(stripeSvc, checkoutRepo)
 	}
 
 	// ── Wire containers ─────────────────────────────────────────────

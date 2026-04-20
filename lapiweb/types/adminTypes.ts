@@ -48,6 +48,7 @@ export interface BookingDetailResponse {
   address_postal_code: string;
   guest_count: number;
   notes: string;
+  chef_notes?: string;
   status: string;
   order_items: BookingOrderItem[];
   order_total: number;
@@ -64,9 +65,47 @@ export interface UpdateOrderStatusRequest {
   status: "pending" | "paid" | "preparing" | "ready" | "picked_up" | "cancelled";
 }
 
+export interface UpdatePrestationStatusRequest {
+  status: "confirmed" | "completed" | "cancelled";
+}
+
+export interface UpdateChefNotesRequest {
+  notes: string;
+}
+
+export interface CancelPrestationRequest {
+  reason?: string;
+  refund: boolean;
+}
+
 export interface UpdatePrestationPricingRequest {
   base_price?: number;
   price_per_person?: number;
   min_guests?: number;
   max_guests?: number;
+}
+
+export interface OrderDetailItem {
+  product_name: string;
+  quantity: number;
+  price: number;
+}
+
+export interface OrderDetailResponse {
+  order_id: string;
+  user_email: string;
+  user_name: string;
+  user_phone: string;
+  status: string;
+  items: OrderDetailItem[];
+  items_total: number;
+  prestation_total: number;
+  total: number;
+  delivery_street: string;
+  delivery_city: string;
+  delivery_postal: string;
+  delivery_phone: string;
+  pickup_code: string;
+  notes: string;
+  created_at: string;
 }

@@ -1,0 +1,15 @@
+{{define "content"}}
+<div class="card">
+  <h1>Votre prestation a été annulée</h1>
+  <p>Bonjour {{.Name}},</p>
+  <p>Nous vous informons que votre prestation cheffe à domicile prévue le <strong>{{.Date}}</strong> a été annulée.</p>
+  {{if .Reason}}
+  <p><strong>Motif :</strong> {{.Reason}}</p>
+  {{end}}
+  {{if eq .Refund "true"}}
+  <p>Un remboursement intégral a été initié sur votre moyen de paiement d'origine. Comptez 5 à 10 jours ouvrés selon votre banque.</p>
+  {{end}}
+  <p>Nous sommes désolés pour cette situation et restons à votre disposition pour toute question.</p>
+  <p>L'équipe Saveurs Thaï</p>
+</div>
+{{end}}

@@ -24,6 +24,8 @@ type PrestationRepository interface {
 	GetBookingByID(ctx context.Context, id uuid.UUID) (*domain.PrestationBooking, error)
 	ListBookingsByUser(ctx context.Context, userID uuid.UUID) ([]domain.PrestationBooking, error)
 	ListAllBookings(ctx context.Context, limit, offset int) ([]domain.PrestationBooking, int64, error)
+	UpdateBookingStatus(ctx context.Context, id uuid.UUID, status string) error
+	UpdateChefNotes(ctx context.Context, id uuid.UUID, notes string) error
 	CancelBooking(ctx context.Context, id uuid.UUID) error
 }
 
@@ -98,6 +100,14 @@ func (r *prestationRepository) ListAllBookings(ctx context.Context, limit, offse
 	}
 	err := q.Preload("Slot").Order("created_at DESC").Limit(limit).Offset(offset).Find(&bookings).Error
 	return bookings, total, err
+}
+
+func (r *prestationRepository) UpdateBookingStatus(ctx context.Context, id uuid.UUID, status string) error {
+	return r.db.WithContext(ctx).Model(&domain.PrestationBooking{}).Where("id = ?", id).Update("status", status).Error
+}
+
+func (r *prestationRepository) UpdateChefNotes(ctx context.Context, id uuid.UUID, notes string) error {
+	return r.db.WithContext(ctx).Model(&domain.PrestationBooking{}).Where("id = ?", id).Update("chef_notes", notes).Error
 }
 
 func (r *prestationRepository) CancelBooking(ctx context.Context, id uuid.UUID) error {

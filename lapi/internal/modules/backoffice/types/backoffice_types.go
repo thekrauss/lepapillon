@@ -74,10 +74,38 @@ type BookingDetailResponse struct {
 	AddressPostalCode string             `json:"address_postal_code"`
 	GuestCount        int                `json:"guest_count"`
 	Notes             string             `json:"notes"`
+	ChefNotes         string             `json:"chef_notes,omitempty"`
 	Status            string             `json:"status"`
 	OrderItems        []BookingOrderItem `json:"order_items"`
 	OrderTotal        int64              `json:"order_total"`
 	CreatedAt         time.Time          `json:"created_at"`
+}
+
+// ── Order detail (admin view of a single order) ────────────────────
+
+type OrderDetailItem struct {
+	ProductName string `json:"product_name"`
+	Quantity    int    `json:"quantity"`
+	Price       int64  `json:"price"`
+}
+
+type OrderDetailResponse struct {
+	OrderID           uuid.UUID         `json:"order_id"`
+	UserEmail         string            `json:"user_email"`
+	UserName          string            `json:"user_name"`
+	UserPhone         string            `json:"user_phone"`
+	Status            string            `json:"status"`
+	Items             []OrderDetailItem `json:"items"`
+	ItemsTotal        int64             `json:"items_total"`
+	PrestationTotal   int64             `json:"prestation_total"`
+	Total             int64             `json:"total"`
+	DeliveryStreet    string            `json:"delivery_street"`
+	DeliveryCity      string            `json:"delivery_city"`
+	DeliveryPostal    string            `json:"delivery_postal"`
+	DeliveryPhone     string            `json:"delivery_phone"`
+	PickupCode        string            `json:"pickup_code"`
+	Notes             string            `json:"notes"`
+	CreatedAt         time.Time         `json:"created_at"`
 }
 
 type BookingOrderItem struct {
