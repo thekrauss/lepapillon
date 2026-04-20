@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import { Mail, MapPin, Phone } from "lucide-react";
+import ImageParallax from "@/components/ImageParallax";
 
 export const metadata: Metadata = {
   title: "Contact — Saveurs Thaï",
@@ -23,11 +24,24 @@ export default function ContactPage() {
           </div>
         </section>
 
-        <section className="py-16">
-          <div className="st-section">
+        <section className="relative w-full overflow-hidden py-16 lg:py-24">
+          
+          {/* 1. L'Image Parallax en fond */}
+          <div className="absolute inset-0 z-0 h-full w-full">
+            <ImageParallax 
+              src="/images/boutique.jpg" // À remplacer par ton image
+              alt="Contactez Saveurs Thaï"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            {/* Voile crème pour adoucir le fond */}
+            <div className="absolute inset-0 bg-st-cream/70 backdrop-blur-[2px]" />
+          </div>
+
+          <div className="st-section relative z-10 mx-auto w-full">
             <div className="mx-auto grid max-w-4xl gap-12 lg:grid-cols-5">
-              {/* formulaire */}
-              <div className="lg:col-span-3">
+              
+              {/* formulaire (Dans une carte en verre, mais contenu INCHANGÉ) */}
+              <div className="lg:col-span-3 rounded-3xl border border-white/50 bg-white/60 p-6 shadow-xl backdrop-blur-md sm:p-8">
                 <form className="space-y-5">
                   <div className="grid gap-5 sm:grid-cols-2">
                     <div>
@@ -63,8 +77,8 @@ export default function ContactPage() {
                 </form>
               </div>
 
-              {/* coordonnées */}
-              <div className="space-y-6 lg:col-span-2">
+              {/* coordonnées (Aussi dans une carte en verre) */}
+              <div className="flex flex-col justify-center space-y-6 lg:col-span-2 rounded-3xl border border-white/40 bg-white/50 p-6 shadow-lg backdrop-blur-md sm:p-8">
                 {[
                   { icon: Mail, label: "Email", value: "contact@saveursthai.fr" },
                   { icon: Phone, label: "Téléphone", value: "01 23 45 67 89" },
@@ -81,6 +95,7 @@ export default function ContactPage() {
                   </div>
                 ))}
               </div>
+              
             </div>
           </div>
         </section>

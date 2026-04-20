@@ -4,6 +4,7 @@ import Footer from "@/components/shared/Footer";
 import { ChefHat, Clock, UtensilsCrossed, ShoppingBag, Sparkles, Users, MapPin, CalendarDays, Star, ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
 import PrestationPricing from "@/components/shop/PrestationPricing";
+import ImageParallax from "@/components/ImageParallax";
 
 export const metadata: Metadata = {
   title: "Prestation Chef à Domicile — Saveurs Thaï",
@@ -34,8 +35,8 @@ export default function PrestationChefPage() {
       <Header />
       <main className="min-h-screen pt-18">
         {/* ── Hero prestation ────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-[var(--st-cream)] to-white py-20">
-          <div className="pointer-events-none absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full bg-st-navy/[0.04] blur-[120px]" />
+        <section className="relative overflow-hidden bg-gradient-to-b from-[var(--st-cream)] to-white py-10">
+          <div className="pointer-events-none absolute -right-40 -top-40 h-[400px] w-[600px] rounded-full bg-st-navy/[0.04] blur-[120px]" />
           <div className="st-section relative z-10">
             <div className="mx-auto max-w-2xl text-center">
               <span className="st-kicker">Expérience unique</span>
@@ -49,7 +50,7 @@ export default function PrestationChefPage() {
                 frais et des recettes familiales.
               </p>
               <div className="mt-8 flex items-center justify-center gap-3">
-                <Link href="/panier/prestation" className="st-btn-primary gap-2 px-7 py-3.5">
+                <Link href="/panier/prestation" className="st-btn-primary gap-2 px-7 py-3.5 bg-black">
                   <CalendarDays className="h-4 w-4" />
                   Réserver une date
                 </Link>
@@ -65,25 +66,46 @@ export default function PrestationChefPage() {
         </section>
 
         {/* ── Ce qui est inclus ──────────────────────────── */}
-        <section className="py-20">
-          <div className="st-section">
-            <div className="text-center">
+        {/* ── Ce qui est inclus (AVEC PARALLAX ET VERRE) ── */}
+        <section className="relative overflow-hidden py-24">
+          
+          {/* 1. L'Image Parallax en fond */}
+          <div className="absolute inset-0 z-0">
+            <ImageParallax 
+              src="/images/boutique.jpg" // À remplacer par une photo de préparation ou d'ingrédients
+              alt="Préparation par la cheffe"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            {/* Voile crème un peu opaque (60%) pour ne pas gêner la lecture des cartes */}
+            <div className="absolute inset-0 bg-st-cream/60 backdrop-blur-[2px]" />
+          </div>
+
+          <div className="st-section relative z-10">
+            
+            {/* 2. En-tête avec fond flouté */}
+            <div className="mx-auto max-w-2xl rounded-2xl bg-white/40 p-8 text-center backdrop-blur-md border border-white/20 shadow-sm">
               <span className="st-kicker">Tout compris</span>
               <h2 className="st-heading mt-3">Ce qui est inclus</h2>
             </div>
-            <div className="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            
+            {/* 3. Les cartes transformées en Glassmorphism */}
+            <div className="mx-auto mt-12 grid max-w-4xl gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {inclus.map((item) => (
-                <div key={item.label} className="st-card flex items-start gap-4 transition-all hover:-translate-y-0.5 hover:shadow-md">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-st-gold/10">
-                    <item.icon className="h-5 w-5 text-st-gold" />
+                <div 
+                  key={item.label} 
+                  className="group flex items-start gap-4 rounded-2xl border border-white/40 bg-white/70 p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-st-gold/30 hover:bg-white/90 hover:shadow-xl"
+                >
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-st-gold shadow-sm">
+                    <item.icon className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <p className="text-[14px] font-bold">{item.label}</p>
-                    <p className="mt-0.5 text-[12px] text-[var(--st-warm-gray)]">{item.detail}</p>
+                    <p className="text-[14px] font-bold text-[var(--st-charcoal)]">{item.label}</p>
+                    <p className="mt-1 text-[12px] font-medium text-[var(--st-warm-gray)]">{item.detail}</p>
                   </div>
                 </div>
               ))}
             </div>
+
           </div>
         </section>
 
@@ -98,21 +120,45 @@ export default function PrestationChefPage() {
           </div>
         </section>
 
-        {/* ── FAQ ────────────────────────────────────────── */}
-        <section className="py-20">
-          <div className="st-section">
-            <div className="text-center">
+        {/* ── FAQ (AVEC PARALLAX ET GLASSMORPHISM) ───────── */}
+        <section className="relative overflow-hidden py-24">
+          
+          {/* 1. L'Image Parallax en fond */}
+          <div className="absolute inset-0 z-0">
+            <ImageParallax 
+              src="/images/boutique.jpg" // À remplacer par une photo d'ambiance (ex: cuisine, épices)
+              alt="Questions fréquentes"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            {/* Voile crème pour garantir une lecture parfaite du texte */}
+            <div className="absolute inset-0 bg-st-cream/60 backdrop-blur-[2px]" />
+          </div>
+
+          <div className="st-section relative z-10">
+            
+            {/* 2. En-tête avec effet "Verre" */}
+            <div className="mx-auto max-w-2xl rounded-2xl bg-white/40 p-8 text-center backdrop-blur-md border border-white/20 shadow-sm">
               <span className="st-kicker">Questions fréquentes</span>
               <h2 className="st-heading mt-3">FAQ</h2>
             </div>
+            
+            {/* 3. Les cartes FAQ en Glassmorphism */}
             <div className="mx-auto mt-12 max-w-2xl space-y-4">
               {faqs.map((faq) => (
-                <div key={faq.q} className="st-card">
-                  <p className="font-sans text-[14px] font-bold">{faq.q}</p>
-                  <p className="mt-2 text-[13px] leading-relaxed text-[var(--st-warm-gray)]">{faq.a}</p>
+                <div 
+                  key={faq.q} 
+                  className="group rounded-2xl border border-white/40 bg-white/70 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-st-gold/30 hover:bg-white/90 hover:shadow-lg"
+                >
+                  <p className="font-sans text-[15px] font-bold text-[var(--st-charcoal)]">
+                    {faq.q}
+                  </p>
+                  <p className="mt-2 text-[13.5px] font-medium leading-relaxed text-[var(--st-warm-gray)]">
+                    {faq.a}
+                  </p>
                 </div>
               ))}
             </div>
+            
           </div>
         </section>
       </main>
