@@ -12,7 +12,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
         <Link href="/" className="mb-8 flex items-center justify-center gap-2.5">
-          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-st-gold text-white shadow-lg shadow-st-gold/20">
+          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-st-gold text-black shadow-lg shadow-st-gold/20">
             <ChefHat className="h-5 w-5" />
           </span>
           <span className="font-serif text-2xl font-bold tracking-tight">
