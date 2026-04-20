@@ -76,7 +76,7 @@ export default function AdminCommandesPage() {
             <button
               key={f.key}
               onClick={() => setFilterStatus(f.key)}
-              className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-[12px] font-medium transition-colors ${
+              className={`whitespace-nowrap cursor-pointer rounded-lg px-3 py-1.5 text-[12px] font-medium transition-colors ${
                 filterStatus === f.key
                   ? "bg-st-gold text-white"
                   : "bg-[var(--muted)] text-[var(--st-warm-gray)] hover:bg-st-gold/10"
@@ -130,7 +130,7 @@ export default function AdminCommandesPage() {
                           <button
                             onClick={() => handleStatusChange(o.order_id, nextStatus)}
                             disabled={updateStatus.isPending}
-                            className="rounded-lg bg-st-gold/10 px-3 py-1.5 text-[11px] font-bold text-st-gold-hover transition-colors hover:bg-st-gold/20 disabled:opacity-50"
+                            className="rounded-lg bg-st-gold/10 cursor-pointer px-3 py-1.5 text-[11px] font-bold text-st-gold-hover transition-colors hover:bg-st-gold/20 disabled:opacity-50"
                           >
                             {nextLabel}
                           </button>
