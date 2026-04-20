@@ -48,7 +48,7 @@ export default function HeroSection() {
               initial="hidden"
               animate="show"
               custom={0}
-              className="inline-flex items-center gap-2 rounded-full border border-st-gold/20 bg-white/80 px-4 py-1.5 backdrop-blur-sm shadow-sm"
+              className="inline-flex items-center gap-2 rounded-full border border-st-gold/10 bg-white/80 px-4 py-1.5 backdrop-blur-sm shadow-sm"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-st-forest animate-pulse" />
               <span className="text-xs font-semibold tracking-wide text-st-charcoal/70">

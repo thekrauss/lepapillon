@@ -32,7 +32,7 @@ export default function PrestationChefPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen pt-20">
+      <main className="min-h-screen pt-18">
         {/* ── Hero prestation ────────────────────────────── */}
         <section className="relative overflow-hidden bg-gradient-to-b from-[var(--st-cream)] to-white py-20">
           <div className="pointer-events-none absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full bg-st-navy/[0.04] blur-[120px]" />

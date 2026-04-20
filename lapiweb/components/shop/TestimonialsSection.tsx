@@ -106,7 +106,6 @@
 //   );
 // }
 
-
 "use client";
 
 import { Star, Quote } from "lucide-react";
@@ -167,13 +166,20 @@ export default function TestimonialsSection() {
       </div>
 
       <div className="st-section relative z-10">
-        <div className="text-center">
+        
+        {/* ── EN-TÊTE AVEC EFFET GLASSMORPHISM (BLUR) ── */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mx-auto max-w-2xl text-center rounded-2xl bg-white/20 p-8 backdrop-blur-md border border-white/20 shadow-sm"
+        >
           <span className="st-kicker">Avis vérifiés</span>
           <h2 className="st-heading mt-3">Ce qu&apos;ils en pensent</h2>
-          <p className="mx-auto mt-4 max-w-md text-[14px] font-medium leading-relaxed text-[var(--st-warm-gray)]">
+          <p className="mx-auto mt-4 max-w-md text-[14px] font-medium leading-relaxed text-[var(--st-charcoal)]">
             Plus de 120 clients satisfaits à Paris et en Île-de-France.
           </p>
-        </div>
+        </motion.div>
 
         <motion.div
           variants={container}

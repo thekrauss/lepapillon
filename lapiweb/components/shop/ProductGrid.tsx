@@ -33,7 +33,7 @@ export default function ProductGrid({ products: propProducts, filters, categoryS
 
   if (!propProducts && (error || !products)) {
     return (
-      <div className="py-20 text-center text-[var(--st-warm-gray)]">
+      <div className="py-20 text-center text-black">
         Impossible de charger les produits.
       </div>
     );
@@ -42,8 +42,8 @@ export default function ProductGrid({ products: propProducts, filters, categoryS
   if (!products || products.length === 0) {
     return (
       <div className="py-20 text-center">
-        <UtensilsCrossed className="mx-auto h-12 w-12 text-[var(--foreground)]/[0.06]" />
-        <p className="mt-4 text-[var(--st-warm-gray)]">Aucun produit trouve.</p>
+        <UtensilsCrossed className="mx-auto h-12 w-12 text-black/20" />
+        <p className="mt-4 text-black">Aucun produit trouve.</p>
       </div>
     );
   }

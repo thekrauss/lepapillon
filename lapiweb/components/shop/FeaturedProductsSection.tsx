@@ -219,15 +219,19 @@ export default function FeaturedProductsSection() {
 
       <div className="st-section relative z-10">
         {/* ── section header ────────────────────────────── */}
+        {/* ── section header ────────────────────────────── */}
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            // --- MODIFICATION ICI ---
+            // On ajoute un padding, des coins arrondis, un fond semi-transparent et le flou
+            className="rounded-2xl bg-white/20 p-6 backdrop-blur-md border border-white/20 shadow-sm"
           >
             <span className="st-kicker">Sélection du moment</span>
             <h2 className="st-heading mt-3">Nos produits phares</h2>
-            <p className="mt-2 max-w-md text-[14px] leading-relaxed text-[var(--st-warm-gray)]">
+            <p className="mt-2 max-w-md text-[14px] leading-relaxed text-[var(--st-charcoal)] font-medium">
               Des kits complets pour reproduire les classiques de la cuisine
               thaïlandaise chez vous.
             </p>

@@ -12,7 +12,7 @@ export default function ContactPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen pt-20">
+      <main className="min-h-screen pt-18">
         <section className="border-b border-[var(--border)] bg-gradient-to-b from-[var(--st-cream)] to-white py-16">
           <div className="st-section mx-auto max-w-2xl text-center">
             <span className="st-kicker">Une question ?</span>

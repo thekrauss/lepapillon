@@ -27,7 +27,7 @@ export default function CategoryTabs({ activeSlug, onSelect }: Props) {
         onClick={() => onSelect(null)}
         className={`rounded-full px-4 py-2 text-[13px] font-semibold transition-all ${
           activeSlug === null
-            ? "bg-st-gold text-white shadow-md shadow-st-gold/20"
+            ? "bg-st-gold text-black shadow-md shadow-st-gold/20"
             : "border border-[var(--border)] text-[var(--foreground)]/70 hover:border-st-gold/30 hover:text-st-gold"
         }`}
       >

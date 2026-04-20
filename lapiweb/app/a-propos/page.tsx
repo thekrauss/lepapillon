@@ -19,7 +19,7 @@ export default function AProposPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen pt-20">
+      <main className="min-h-screen pt-18">
         {/* Hero */}
         <section className="border-b border-[var(--border)] bg-gradient-to-b from-[var(--st-cream)] to-white py-20">
           <div className="st-section mx-auto max-w-3xl text-center">

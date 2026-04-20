@@ -14,7 +14,7 @@ export default function BoutiquePage() {
     <>
       <Header />
       <CartDrawer />
-      <main className="min-h-screen pt-20">
+      <main className="min-h-screen pt-18">
         {/* Hero */}
         <section className="border-b border-[var(--border)] bg-gradient-to-b from-[var(--st-cream)] to-white py-12">
           <div className="st-section">
@@ -27,8 +27,8 @@ export default function BoutiquePage() {
         </section>
 
         {/* Content */}
-        <section className="py-10">
-          <div className="st-section">
+        <section className="py-0">
+          <div >
             <BoutiqueContent />
           </div>
         </section>
